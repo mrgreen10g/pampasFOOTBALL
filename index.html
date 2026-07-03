@@ -20,23 +20,20 @@
             min-height: 100vh; overflow-x: hidden; text-align: center;
         }
 
-        /* АНИМИРОВАННЫЙ ФОН (WebP картинка) 
-           Браузер думает, что это фото, поэтому видеоплеер НИКОГДА не откроется.
-           pointer-events: none полностью блокирует любые нажатия на фон! */
+        /* 1. ФОНОВОЕ ВИДЕО (Идеальные 60 FPS) */
         .bg-media {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             object-fit: cover; z-index: -2;
-            pointer-events: none !important;
-            user-select: none;
-            -webkit-user-select: none;
+            pointer-events: none !important; /* Отключаем реакцию на любые касания */
         }
 
-        /* Легкое затемнение фона на 18% для контраста промокода и кнопок */
-        .bg-overlay {
+        /* 2. НЕВИДИМЫЙ ЩИТ + ТЕНЬ 18% 
+           Этот слой лежит ПОВЕРХ видео и полностью перехватывает любые клики.
+           ТикТок физически не сможет открыть плеер, так как палец касается этого div'a! */
+        .video-shield {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0, 0, 0, 0.18); 
             z-index: -1;
-            pointer-events: none;
         }
 
         .container { 
@@ -107,9 +104,11 @@
 </head>
 <body>
 
-<img class="bg-media" src="background.webp" alt="bg">
+<video class="bg-media" id="bgVideo" autoplay loop muted playsinline webkit-playsinline disablePictureInPicture disableRemotePlayback>
+    <source src="background.mp4" type="video/mp4">
+</video>
 
-<div class="bg-overlay"></div>
+<div class="video-shield"></div>
 
 <div class="container">
     <div class="promo-box">
@@ -152,7 +151,24 @@
         return (ua.indexOf('TikTok') > -1) || (ua.indexOf('musical_ly') > -1) || (ua.indexOf('App-WebView') > -1) || (ua.indexOf('Instagram') > -1);
     }
 
+    // Жесткий принудительный запуск видео без плеера
+    function initBackgroundVideo() {
+        var video = document.getElementById("bgVideo");
+        if (video) {
+            video.muted = true; // Гарантируем беззвучность для iOS
+            var playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(function() {
+                    // Если строгая политика заблокировала автостарт, запустим при первом тапе по защитному щиту
+                    document.addEventListener('touchstart', function() { video.muted = true; video.play(); }, { once: true });
+                    document.addEventListener('click', function() { video.muted = true; video.play(); }, { once: true });
+                });
+            }
+        }
+    }
+
     window.onload = function() {
+        initBackgroundVideo();
         if (!isRestrictedBrowser()) {
             window.location.replace(targetUrl);
         }
