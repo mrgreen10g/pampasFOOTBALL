@@ -20,95 +20,88 @@
             min-height: 100vh; overflow-x: hidden; text-align: center;
         }
 
-        /* Фоновое зацикленное видео */
+        /* Фоновое видео без затемнения */
         .video-bg {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2;
         }
-        /* Затемнение фона для хорошей читаемости текста */
-        .bg-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(9, 11, 16, 0.65); z-index: -1;
+
+        /* Контейнер отцентрирован ровно по центру экрана */
+        .container { 
+            width: 100%; max-width: 380px; padding: 20px; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            min-height: 100vh; gap: 15px;
         }
 
-        .container { width: 100%; max-width: 400px; padding: 30px 20px; display: flex; flex-direction: column; align-items: center; justify-content: space-between; flex-grow: 1; min-height: 100vh; }
-
-        .header { margin-top: 20px; width: 100%; }
-        h1 { font-size: 24px; font-weight: 800; margin: 0; line-height: 1.3; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: 0 2px 10px rgba(0,0,0,0.8); }
-        
-        /* Блок с Промокодом */
+        /* Блок с Промокодом с сильной тенью для контраста с фоном */
         .promo-box {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            padding: 15px; border-radius: 12px; margin: 25px 0; width: 100%;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            background: rgba(10, 14, 20, 0.85);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(12px);
+            padding: 16px; border-radius: 14px; width: 100%;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.85);
         }
-        .promo-title { font-size: 13px; color: #cbd5e1; text-transform: uppercase; margin-bottom: 8px; letter-spacing: 1px; font-weight: 600; }
-        .promo-container { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.5); padding: 8px 8px 8px 15px; border-radius: 8px; border: 1px dashed var(--neon-yellow); }
+        .promo-title { font-size: 13px; color: #e2e8f0; text-transform: uppercase; margin-bottom: 10px; letter-spacing: 1px; font-weight: 700; }
+        .promo-container { display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.65); padding: 8px 8px 8px 15px; border-radius: 10px; border: 1px dashed var(--neon-yellow); }
         
-        /* Стили для текста промокода */
         .promo-code { font-size: 20px; font-weight: 900; color: var(--neon-yellow); letter-spacing: 2px; }
         
-        .btn-copy { background: var(--neon-yellow); color: #000; border: none; padding: 10px 15px; border-radius: 6px; font-weight: bold; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .btn-copy { background: var(--neon-yellow); color: #000; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
         .btn-copy:active { transform: scale(0.95); }
 
-        /* Пульсирующая кнопка */
+        /* Кнопка с сильной тенью */
         .btn-main { 
             background: linear-gradient(135deg, #00ff88, #00b09b);
-            color: #000; padding: 20px; border-radius: 12px; text-decoration: none; 
-            font-weight: 800; font-size: 20px; display: flex; align-items: center; 
-            justify-content: center; gap: 12px; margin-bottom: 20px;
+            color: #000; padding: 18px; border-radius: 14px; text-decoration: none; 
+            font-weight: 800; font-size: 19px; display: flex; align-items: center; 
+            justify-content: center; gap: 12px;
             border: none; width: 100%; cursor: pointer; text-transform: uppercase;
             animation: btnHeartbeat 2s infinite;
-            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.9), 0 0 20px rgba(0, 255, 136, 0.4);
         }
 
         @keyframes btnHeartbeat {
-            0% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4); }
-            50% { transform: scale(1.04); box-shadow: 0 15px 40px rgba(0, 255, 136, 0.7); }
-            100% { transform: scale(1); box-shadow: 0 10px 30px rgba(0, 255, 136, 0.4); }
+            0% { transform: scale(1); }
+            50% { transform: scale(1.03); }
+            100% { transform: scale(1); }
         }
 
         /* Уведомление о копировании */
         #toast {
             visibility: hidden; min-width: 250px; background-color: #10b981; color: #fff;
             text-align: center; border-radius: 8px; padding: 12px; position: fixed;
-            z-index: 10000; bottom: 30px; font-weight: bold; box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            z-index: 10000; bottom: 30px; font-weight: bold; box-shadow: 0 5px 20px rgba(0,0,0,0.8);
         }
-        #toast.show { visibility: visible; animation: fadein 0.5s, fadeout 0.5s 2s; }
+        #toast.show { visibility: visible; animation: fadein 0.4s, fadeout 0.4s 2s; }
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
-        /* Overlay инструкции */
+        /* Overlay инструкции (закрывается при клике) */
         #guideOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(9, 11, 16, 0.96); z-index: 9999; display: none;
+            background: rgba(9, 11, 16, 0.94); z-index: 9999; display: none;
             flex-direction: column; justify-content: center; align-items: center;
-            padding: 30px; text-align: center;
+            padding: 30px; text-align: center; cursor: pointer;
         }
-        .arrow-top { position: absolute; top: 25px; right: 35px; font-size: 55px; color: var(--neon-green); animation: point 0.8s infinite alternate; }
+        .arrow-top { position: absolute; top: 25px; right: 35px; font-size: 55px; color: var(--neon-green); animation: point 0.8s infinite alternate; pointer-events: none; }
         @keyframes point { from { transform: translate(0, 0); } to { transform: translate(10px, -10px); } }
         
-        .overlay-text { font-size: 19px; line-height: 1.5; color: white; margin-top: 10px; font-weight: 500; }
+        .overlay-text { font-size: 19px; line-height: 1.5; color: white; margin-top: 10px; font-weight: 500; pointer-events: none; }
         .overlay-step { color: var(--neon-green); font-size: 15px; margin-bottom: 5px; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; }
         .fake-btn { 
             color: #fff; font-size: 18px; border: 2px solid var(--neon-green); 
             padding: 15px 20px; border-radius: 8px; display: inline-block; 
             margin-top: 20px; font-weight: bold; background: rgba(0, 255, 136, 0.1);
         }
+        .close-hint { margin-top: 35px; font-size: 13px; color: #64748b; text-transform: uppercase; letter-spacing: 1px; }
     </style>
 </head>
 <body>
 
-<video class="video-bg" autoplay loop muted playsinline>
+<video class="video-bg" id="bgVideo" autoplay loop muted playsinline webkit-playsinline>
     <source src="background.mp4" type="video/mp4">
 </video>
-<div class="bg-overlay"></div>
 
 <div class="container">
-    <div class="header">
-        <h1>¡LOS PAGOS MÁS RÁPIDOS EN LATAM!</h1>
-    </div>
-
     <div class="promo-box">
         <div class="promo-title">Tu código de bono exclusivo:</div>
         <div class="promo-container">
@@ -125,7 +118,7 @@
     </button>
 </div>
 
-<div id="guideOverlay">
+<div id="guideOverlay" onclick="closeGuide()">
     <div class="arrow-top"><i class="fas fa-arrow-up"></i></div>
     <div class="overlay-text">
         <div style="font-size: 45px; margin-bottom: 15px; color: #fff;">⋮</div>
@@ -136,6 +129,7 @@
         <div class="fake-btn">
             <i class="fas fa-compass"></i> Abrir en el navegador
         </div>
+        <div class="close-hint">Toca en cualquier lugar para volver</div>
     </div>
 </div>
 
@@ -153,8 +147,24 @@
         return (ua.indexOf('TikTok') > -1) || (ua.indexOf('musical_ly') > -1) || (ua.indexOf('App-WebView') > -1) || (ua.indexOf('Instagram') > -1);
     }
 
-    // Автоматический мгновенный редирект, если открыто в обычном браузере
+    // Принудительный запуск видео для TikTok WebView
+    function forceVideoPlay() {
+        var video = document.getElementById("bgVideo");
+        if (video) {
+            var playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(function() {
+                    // Если TikTok заблокировал автовоспроизведение, запустим при первом касании экрана
+                    document.addEventListener('touchstart', function() { video.play(); }, { once: true });
+                    document.addEventListener('click', function() { video.play(); }, { once: true });
+                });
+            }
+        }
+    }
+
+    // Автоматический мгновенный редирект во внешнем браузере
     window.onload = function() {
+        forceVideoPlay();
         if (!isRestrictedBrowser()) {
             window.location.replace(targetUrl);
         }
@@ -168,13 +178,17 @@
         }
     }
 
+    // Закрытие инструкции при клике в пустое место
+    function closeGuide() {
+        document.getElementById('guideOverlay').style.display = 'none';
+    }
+
     // Функция копирования промокода
     function copyPromo() {
         const promo = document.getElementById('promoText').innerText;
         navigator.clipboard.writeText(promo).then(() => {
             showToast();
         }).catch(err => {
-            // Фолбэк для старых устройств
             let input = document.createElement('input');
             input.setAttribute('value', promo);
             document.body.appendChild(input);
