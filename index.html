@@ -20,19 +20,33 @@
             min-height: 100vh; overflow-x: hidden; text-align: center;
         }
 
-        /* Фоновое видео без затемнения */
-        .video-bg {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2;
+        /* 1. Анимированный фон (GIF или Видео). 
+           КРИТИЧЕСКИ ВАЖНО: pointer-events: none запрещает кликать на фон и вызывать плеер! */
+        .bg-media {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            object-fit: cover; z-index: -2;
+            pointer-events: none; /* Запрет перехвата касаний браузером */
+            user-select: none;
+            -webkit-user-select: none;
         }
 
-        /* Контейнер отцентрирован ровно по центру экрана */
+        /* 2. Легкое затемнение фона на 18% для выразительности кнопок */
+        .bg-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0, 0, 0, 0.18); 
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Контейнер по центру экрана */
         .container { 
             width: 100%; max-width: 380px; padding: 20px; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
             min-height: 100vh; gap: 15px;
+            position: relative; z-index: 1;
         }
 
-        /* Блок с Промокодом с сильной тенью для контраста с фоном */
+        /* Блок с Промокодом */
         .promo-box {
             background: rgba(10, 14, 20, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.25);
@@ -48,7 +62,7 @@
         .btn-copy { background: var(--neon-yellow); color: #000; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
         .btn-copy:active { transform: scale(0.95); }
 
-        /* Кнопка с сильной тенью */
+        /* Кнопка забрать бонус */
         .btn-main { 
             background: linear-gradient(135deg, #00ff88, #00b09b);
             color: #000; padding: 18px; border-radius: 14px; text-decoration: none; 
@@ -75,7 +89,7 @@
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
-        /* Overlay инструкции (закрывается при клике) */
+        /* Overlay инструкции */
         #guideOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(9, 11, 16, 0.94); z-index: 9999; display: none;
@@ -97,16 +111,15 @@
 </head>
 <body>
 
-<video class="video-bg" id="bgVideo" autoplay loop muted playsinline webkit-playsinline>
-    <source src="background.mp4" type="video/mp4">
-</video>
+<img class="bg-media" src="background.gif" alt="bg">
+
+<div class="bg-overlay"></div>
 
 <div class="container">
     <div class="promo-box">
         <div class="promo-title">Tu código de bono exclusivo:</div>
         <div class="promo-container">
             <span class="promo-code" id="promoText">STREAMCLUB</span>
-            
             <button class="btn-copy" onclick="copyPromo()">
                 <i class="fas fa-copy"></i> Copiar
             </button>
@@ -136,35 +149,14 @@
 <div id="toast"><i class="fas fa-check-circle"></i> ¡Código copiado con éxito!</div>
 
 <script>
-    // =========================================================================
-    // 2. ССЫЛКА НА КОТОРУЮ ПРИНУДИТЕЛЬНО ПЕРЕКИДЫВАЕМ (МЕНЯТЬ ЗДЕСЬ)
-    // =========================================================================
     const targetUrl = "https://bit.ly/pampasTT";
-    // =========================================================================
 
     function isRestrictedBrowser() {
         var ua = navigator.userAgent || navigator.vendor || window.opera;
         return (ua.indexOf('TikTok') > -1) || (ua.indexOf('musical_ly') > -1) || (ua.indexOf('App-WebView') > -1) || (ua.indexOf('Instagram') > -1);
     }
 
-    // Принудительный запуск видео для TikTok WebView
-    function forceVideoPlay() {
-        var video = document.getElementById("bgVideo");
-        if (video) {
-            var playPromise = video.play();
-            if (playPromise !== undefined) {
-                playPromise.catch(function() {
-                    // Если TikTok заблокировал автовоспроизведение, запустим при первом касании экрана
-                    document.addEventListener('touchstart', function() { video.play(); }, { once: true });
-                    document.addEventListener('click', function() { video.play(); }, { once: true });
-                });
-            }
-        }
-    }
-
-    // Автоматический мгновенный редирект во внешнем браузере
     window.onload = function() {
-        forceVideoPlay();
         if (!isRestrictedBrowser()) {
             window.location.replace(targetUrl);
         }
@@ -178,12 +170,10 @@
         }
     }
 
-    // Закрытие инструкции при клике в пустое место
     function closeGuide() {
         document.getElementById('guideOverlay').style.display = 'none';
     }
 
-    // Функция копирования промокода
     function copyPromo() {
         const promo = document.getElementById('promoText').innerText;
         navigator.clipboard.writeText(promo).then(() => {
