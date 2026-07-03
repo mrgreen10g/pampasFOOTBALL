@@ -20,17 +20,18 @@
             min-height: 100vh; overflow-x: hidden; text-align: center;
         }
 
-        /* 1. Анимированный фон (GIF или Видео). 
-           КРИТИЧЕСКИ ВАЖНО: pointer-events: none запрещает кликать на фон и вызывать плеер! */
+        /* АНИМИРОВАННЫЙ ФОН (WebP картинка) 
+           Браузер думает, что это фото, поэтому видеоплеер НИКОГДА не откроется.
+           pointer-events: none полностью блокирует любые нажатия на фон! */
         .bg-media {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             object-fit: cover; z-index: -2;
-            pointer-events: none; /* Запрет перехвата касаний браузером */
+            pointer-events: none !important;
             user-select: none;
             -webkit-user-select: none;
         }
 
-        /* 2. Легкое затемнение фона на 18% для выразительности кнопок */
+        /* Легкое затемнение фона на 18% для контраста промокода и кнопок */
         .bg-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(0, 0, 0, 0.18); 
@@ -38,7 +39,6 @@
             pointer-events: none;
         }
 
-        /* Контейнер по центру экрана */
         .container { 
             width: 100%; max-width: 380px; padding: 20px; 
             display: flex; flex-direction: column; align-items: center; justify-content: center; 
@@ -46,7 +46,6 @@
             position: relative; z-index: 1;
         }
 
-        /* Блок с Промокодом */
         .promo-box {
             background: rgba(10, 14, 20, 0.85);
             border: 1px solid rgba(255, 255, 255, 0.25);
@@ -62,7 +61,6 @@
         .btn-copy { background: var(--neon-yellow); color: #000; border: none; padding: 10px 16px; border-radius: 8px; font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
         .btn-copy:active { transform: scale(0.95); }
 
-        /* Кнопка забрать бонус */
         .btn-main { 
             background: linear-gradient(135deg, #00ff88, #00b09b);
             color: #000; padding: 18px; border-radius: 14px; text-decoration: none; 
@@ -79,7 +77,6 @@
             100% { transform: scale(1); }
         }
 
-        /* Уведомление о копировании */
         #toast {
             visibility: hidden; min-width: 250px; background-color: #10b981; color: #fff;
             text-align: center; border-radius: 8px; padding: 12px; position: fixed;
@@ -89,7 +86,6 @@
         @keyframes fadein { from {bottom: 0; opacity: 0;} to {bottom: 30px; opacity: 1;} }
         @keyframes fadeout { from {bottom: 30px; opacity: 1;} to {bottom: 0; opacity: 0;} }
 
-        /* Overlay инструкции */
         #guideOverlay { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             background: rgba(9, 11, 16, 0.94); z-index: 9999; display: none;
@@ -111,7 +107,7 @@
 </head>
 <body>
 
-<img class="bg-media" src="background.gif" alt="bg">
+<img class="bg-media" src="background.webp" alt="bg">
 
 <div class="bg-overlay"></div>
 
